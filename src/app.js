@@ -1,42 +1,20 @@
 'use strict';
 
-angular.module('angularApp', []); // register new app
+// register new app
+angular.module('angularApp', ['ngRoute']);
 
-function mainController($scope) {
+// register service
+angular.module('angularApp').service('ClientsDAO', ClientsDAO);
 
-    $scope.formData = {};
+// register application routes
+angular.module('angularApp').config(['$routeProvider', ($routeProvider) => {
+    // declare routes
+    $routeProvider.when('/main', {
+        controller: mainCtrl,
+        templateUrl: 'src/views/main.html'
+    }).when('/create-client', {
+        controller: ['$scope', 'ClientsDAO', createClientCtrl],
+        templateUrl: 'src/views/createClient.html'
+    }).otherwise('/');
 
-    $scope.addClient = function () {
-        const client = angular.copy($scope.formData, {});
-        $scope.clients.push(client);
-        $scope.formData = {};
-    };
-
-    // scope is an object with shared assets
-    $scope.clients = [
-        {
-            firstName: 'Jan',
-            lastName: 'Kowalski',
-            year: 1967
-        },
-        {
-            firstName: 'Jakub',
-            lastName: 'Kowalski',
-            year: 1990
-        },
-        {
-            firstName: 'Andrzej',
-            lastName: 'Kowalski',
-            year: 1961
-        },
-        {
-            firstName: 'Józef',
-            lastName: 'Kowalski',
-            year: 1987
-        }
-    ];
-
-}
-
-// register new controller ( name, function )
-angular.module('angularApp').controller('mainController', mainController);
+}]);
